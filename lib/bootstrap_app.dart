@@ -14,13 +14,13 @@ import 'features/note/note_container.dart';
 Future<void> bootstrapApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   HttpOverrides.global = CustomHttpOverrides();
 
   sl.registerLazySingleton<Dio>(() => DioClient.create());
 
-  // initFirebaseInjection();
+  initFirebaseInjection();
   initAuthInjection();
   initNoteInjection();
 }
