@@ -210,8 +210,8 @@ return $default(_that.id,_that.userId,_that.title,_that.content,_that.createdAt,
 /// @nodoc
 
 
-class _NoteEntity implements NoteEntity {
-  const _NoteEntity({required this.id, required this.userId, required this.title, required this.content, required this.createdAt, required this.updatedAt});
+class _NoteEntity extends NoteEntity {
+  const _NoteEntity({required this.id, required this.userId, required this.title, required this.content, required this.createdAt, required this.updatedAt}): super._();
   
 
 @override final  String id;

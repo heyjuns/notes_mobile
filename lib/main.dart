@@ -23,7 +23,10 @@ class MyApp extends StatelessWidget {
       routerConfig: appRouter,
       builder: (context, child) => FTheme(
         data: theme,
-        child: AppShell(child: child!),
+        child: FToaster(
+          style: FToasterStyleDelta.delta(toastAlignment: .bottomCenter),
+          child: AppShell(child: child!),
+        ),
       ),
     );
   }

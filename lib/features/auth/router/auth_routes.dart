@@ -1,5 +1,6 @@
 enum AuthRoutes {
-  login('/login');
+  login('/login'),
+  register('/register');
 
   final String path;
   const AuthRoutes(this.path);

@@ -3,18 +3,12 @@ import 'package:notes_mobile/core/utils/typedefs/base_response.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/domain/repositories/note_repository.dart';
 
-class GetNotesUseCase extends UseCase<List<NoteEntity>, GetNotesParams> {
+class GetNotesUseCase extends UseCase<List<NoteEntity>, String> {
   const GetNotesUseCase(this._repository);
 
   final NoteRepository _repository;
 
   @override
-  BaseResponse<List<NoteEntity>> call(GetNotesParams params) =>
-      _repository.getNotes(userId: params.userId);
-}
-
-class GetNotesParams {
-  const GetNotesParams({required this.userId});
-
-  final String userId;
+  BaseResponse<List<NoteEntity>> call(String userId) =>
+      _repository.getNotes(userId: userId);
 }

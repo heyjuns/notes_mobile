@@ -1,51 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forui/forui.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:notes_mobile/features/auth/presentation/controllers/login/login_bloc.dart';
-import 'package:notes_mobile/features/auth/presentation/params/sign_in_params.dart';
-import 'package:notes_mobile/features/auth/router/auth_routes.dart';
-import 'package:notes_mobile/features/note/router/note_routes.dart';
+import 'package:forui/forui.dart';
+import 'package:hooked_bloc/hooked_bloc.dart';
+import 'package:notes_mobile/features/auth/presentation/params/sign_up_params.dart';
 
-class LoginScreen extends HookWidget {
-  const LoginScreen({super.key});
+import '../controllers/register/register_bloc.dart';
+
+class RegisterScreen extends HookWidget {
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final loginBloc = useBloc<LoginBloc>();
-    final usernameController = useTextEditingController();
+    final loginBloc = useBloc<RegisterBloc>();
+    final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    final nameController = useTextEditingController();
     useBlocListener(loginBloc, (bloc, current, context) {
       current.whenOrNull(
-        loaded: (user) => context.go(NoteRoutes.notes.path),
+        registerSuccess: (user) =>
+            showFToast(context: context, title: Text(user.toString())),
         failed: (error) =>
             showFToast(context: context, title: Text(error.toString())),
       );
     });
 
     return FScaffold(
-      header: FHeader(title: Text('Login')),
+      header: FHeader(title: Text('Register')),
       child: Column(
         spacing: 8,
         children: [
           FTextField(
             enabled: true,
-            label: const Text('Email'),
+            label: const Text('Name'),
             hint: 'John Doe',
             error: null,
-            control: FTextFieldControl.managed(controller: usernameController),
+            control: FTextFieldControl.managed(controller: nameController),
+          ),
+          FTextField(
+            enabled: true,
+            label: const Text('Email'),
+            hint: 'John@doe.com',
+            error: null,
+            control: FTextFieldControl.managed(controller: emailController),
           ),
           FTextField.password(
             enabled: true,
             label: const Text('Password'),
-            hint: 'Enter password...',
+            hint: 'Enter password',
             error: null,
             control: FTextFieldControl.managed(controller: passwordController),
           ),
+
           SizedBox(height: 16),
-          BlocBuilder<LoginBloc, LoginState>(
+          BlocBuilder<RegisterBloc, RegisterState>(
             builder: (context, state) {
               final isLoading = state.maybeWhen(
                 loading: () => true,
@@ -54,25 +62,18 @@ class LoginScreen extends HookWidget {
               return FButton(
                 onPress: () {
                   loginBloc.add(
-                    LoginEvent.started(
-                      params: SignInParams(
-                        email: usernameController.text,
+                    RegisterEvent.started(
+                      params: SignUpParams(
+                        name: nameController.text,
+                        email: emailController.text,
                         password: passwordController.text,
                       ),
                     ),
                   );
                 },
-                child: isLoading ? FCircularProgress() : Text('Login'),
+                child: isLoading ? FCircularProgress() : Text('Register'),
               );
             },
-          ),
-          FButton(
-            variant: .ghost,
-            onPress: () => context.pushNamed(AuthRoutes.register.name),
-            child: Text(
-              "Don't have an account? Create Now",
-              style: context.theme.typography.xs.copyWith(),
-            ),
           ),
         ],
       ),
