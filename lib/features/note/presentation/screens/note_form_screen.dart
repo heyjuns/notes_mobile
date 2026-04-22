@@ -47,7 +47,17 @@ class NoteFormScreen extends HookWidget {
     });
 
     return FScaffold(
-      header: FHeader(title: Text(_isEditing ? 'Edit Note' : 'New Note')),
+      header: FHeader.nested(
+        prefixes: [
+          FHeaderAction.x(
+            onPress: () {
+              context.pop();
+            },
+          ),
+        ],
+        titleAlignment: .centerLeft,
+        title: Text(_isEditing ? 'Edit Note' : 'New Note'),
+      ),
       child: Column(
         spacing: 12,
         children: [
