@@ -7,7 +7,7 @@ abstract class UserEntity with _$UserEntity {
   const factory UserEntity({
     required String uid,
     required String email,
-    required String name,
-    required DateTime createdAt,
+    @Default('') String name,
+    DateTime? createdAt,
   }) = _UserEntity;
 }

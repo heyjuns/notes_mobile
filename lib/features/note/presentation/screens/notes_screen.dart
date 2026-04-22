@@ -5,6 +5,7 @@ import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:notes_mobile/core/service_locator.dart';
+import 'package:notes_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:notes_mobile/features/auth/presentation/controllers/authentication/authentication_bloc.dart';
 import 'package:notes_mobile/features/auth/presentation/controllers/logout/logout_bloc.dart';
 import 'package:notes_mobile/features/auth/presentation/widgets/logout_button.dart';
@@ -19,7 +20,7 @@ class NotesScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notesBloc = useBloc<NotesBloc>();
-    final authBloc = useBloc<AuthenticationBloc>();
+    final authBloc = context.read<AuthenticationBloc>();
 
     final userId =
         authBloc.state.whenOrNull(authenticated: (user) => user.uid) ?? '';
@@ -31,7 +32,14 @@ class NotesScreen extends HookWidget {
 
     return FScaffold(
       header: FHeader(
-        title: const Text('Notes'),
+        title: BlocSelector<AuthenticationBloc, AuthenticationState, String>(
+          selector: (state) {
+            return state.whenOrNull(authenticated: (user) => user.name) ?? '';
+          },
+          builder: (context, state) {
+            return Text('Hi, $state');
+          },
+        ),
         suffixes: [
           FButton.icon(
             onPress: () async {

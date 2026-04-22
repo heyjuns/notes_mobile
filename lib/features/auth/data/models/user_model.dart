@@ -5,14 +5,14 @@ class UserModel {
   const UserModel({
     required this.uid,
     required this.email,
-    required this.name,
-    required this.createdAt,
+    this.name = '',
+    this.createdAt,
   });
 
   final String uid;
   final String email;
   final String name;
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   factory UserModel.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
@@ -27,7 +27,7 @@ class UserModel {
   Map<String, dynamic> toFirestore() => {
         'email': email,
         'name': name,
-        'createdAt': Timestamp.fromDate(createdAt),
+        'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
       };
 
   UserEntity toEntity() => UserEntity(

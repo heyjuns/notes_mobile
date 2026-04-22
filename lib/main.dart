@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:notes_mobile/core/service_locator.dart';
 import 'package:notes_mobile/features/auth/presentation/controllers/authentication/authentication_bloc.dart';
+import 'package:notes_mobile/features/auth/router/auth_routes.dart';
+import 'package:notes_mobile/features/note/router/note_routes.dart';
 
 import 'app_router.dart';
 import 'app_shell.dart';
@@ -21,16 +23,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = FThemes.neutral.light;
     return BlocProvider(
-      create: (context) => sl<AuthenticationBloc>(),
-      child: MaterialApp.router(
-        theme: theme.toApproximateMaterialTheme(),
-        title: 'Notes App',
-        routerConfig: appRouter,
-        builder: (context, child) => FTheme(
-          data: theme,
-          child: FToaster(
-            style: FToasterStyleDelta.delta(toastAlignment: .bottomCenter),
-            child: AppShell(child: child!),
+      create: (context) =>
+          sl<AuthenticationBloc>()..add(AuthenticationEvent.started()),
+      child: BlocListener<AuthenticationBloc, AuthenticationState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            authenticated: (_) => appRouter.go(NoteRoutes.notes.path),
+            unauthenticated: () => appRouter.go(AuthRoutes.login.path),
+          );
+        },
+        child: MaterialApp.router(
+          theme: theme.toApproximateMaterialTheme(),
+          title: 'Notes App',
+          routerConfig: appRouter,
+          builder: (context, child) => FTheme(
+            data: theme,
+            child: FToaster(
+              style: FToasterStyleDelta.delta(toastAlignment: .bottomCenter),
+              child: AppShell(child: child!),
+            ),
           ),
         ),
       ),

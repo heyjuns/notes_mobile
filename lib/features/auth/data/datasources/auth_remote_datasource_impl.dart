@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_mobile/features/auth/data/models/user_model.dart';
 import 'package:notes_mobile/core/error/exceptions/remote_exception.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../domain/datasources/auth_remote_datasource.dart';
 
@@ -59,13 +60,15 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Future<void> signOut() => _auth.signOut();
 
   @override
-  Stream<UserModel?> getCurrentUser() => _auth
-      .authStateChanges()
-      .asyncMap((firebaseUser) async {
-        if (firebaseUser == null) return null;
-        final doc = await _users.doc(firebaseUser.uid).get();
-        if (!doc.exists) return null;
-        return UserModel.fromFirestore(doc);
-      })
-      .handleError((_) => null);
+  Stream<UserModel?> getCurrentUser() {
+    return _auth.authStateChanges().switchMap((user) {
+      if (user == null) return Stream.value(null);
+
+      return Stream.fromFuture(_users.doc(user.uid).get())
+          .map((doc) {
+            return doc.exists ? UserModel.fromFirestore(doc) : null;
+          })
+          .handleError((_) => null);
+    });
+  }
 }

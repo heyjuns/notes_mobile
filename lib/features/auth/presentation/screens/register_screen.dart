@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
+import 'package:notes_mobile/core/error/failures/failure.dart';
 import 'package:notes_mobile/features/auth/presentation/params/sign_up_params.dart';
 
 import '../controllers/register/register_bloc.dart';
@@ -19,9 +20,17 @@ class RegisterScreen extends HookWidget {
     useBlocListener(loginBloc, (bloc, current, context) {
       current.whenOrNull(
         registerSuccess: (user) =>
-            showFToast(context: context, title: Text(user.toString())),
-        failed: (error) =>
-            showFToast(context: context, title: Text(error.toString())),
+            showFToast(context: context, title: Text('Register Success')),
+        failed: (error) {
+          final String errorMessage = error.maybeWhen(
+            cache: (message) => message,
+            network: (message) => message,
+            notFound: (message) => message,
+            remote: (message, statusCode) => message,
+            orElse: () => '',
+          );
+          return showFToast(context: context, title: Text(errorMessage));
+        },
       );
     });
 

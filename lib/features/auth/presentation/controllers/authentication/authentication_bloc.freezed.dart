@@ -55,12 +55,11 @@ extension AuthenticationEventPatterns on AuthenticationEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _UserChanged value)?  userChanged,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that);case _UserChanged() when userChanged != null:
-return userChanged(_that);case _:
+return started(_that);case _:
   return orElse();
 
 }
@@ -78,12 +77,11 @@ return userChanged(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _UserChanged value)  userChanged,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,}){
 final _that = this;
 switch (_that) {
 case _Started():
-return started(_that);case _UserChanged():
-return userChanged(_that);case _:
+return started(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +98,11 @@ return userChanged(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _UserChanged value)?  userChanged,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that);case _UserChanged() when userChanged != null:
-return userChanged(_that);case _:
+return started(_that);case _:
   return null;
 
 }
@@ -122,11 +119,10 @@ return userChanged(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( UserEntity? user)?  userChanged,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started();case _UserChanged() when userChanged != null:
-return userChanged(_that.user);case _:
+return started();case _:
   return orElse();
 
 }
@@ -144,11 +140,10 @@ return userChanged(_that.user);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( UserEntity? user)  userChanged,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,}) {final _that = this;
 switch (_that) {
 case _Started():
-return started();case _UserChanged():
-return userChanged(_that.user);case _:
+return started();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +160,10 @@ return userChanged(_that.user);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( UserEntity? user)?  userChanged,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started();case _UserChanged() when userChanged != null:
-return userChanged(_that.user);case _:
+return started();case _:
   return null;
 
 }
@@ -208,84 +202,6 @@ String toString() {
 
 
 
-
-/// @nodoc
-
-
-class _UserChanged implements AuthenticationEvent {
-  const _UserChanged(this.user);
-  
-
- final  UserEntity? user;
-
-/// Create a copy of AuthenticationEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$UserChangedCopyWith<_UserChanged> get copyWith => __$UserChangedCopyWithImpl<_UserChanged>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserChanged&&(identical(other.user, user) || other.user == user));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,user);
-
-@override
-String toString() {
-  return 'AuthenticationEvent.userChanged(user: $user)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$UserChangedCopyWith<$Res> implements $AuthenticationEventCopyWith<$Res> {
-  factory _$UserChangedCopyWith(_UserChanged value, $Res Function(_UserChanged) _then) = __$UserChangedCopyWithImpl;
-@useResult
-$Res call({
- UserEntity? user
-});
-
-
-$UserEntityCopyWith<$Res>? get user;
-
-}
-/// @nodoc
-class __$UserChangedCopyWithImpl<$Res>
-    implements _$UserChangedCopyWith<$Res> {
-  __$UserChangedCopyWithImpl(this._self, this._then);
-
-  final _UserChanged _self;
-  final $Res Function(_UserChanged) _then;
-
-/// Create a copy of AuthenticationEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? user = freezed,}) {
-  return _then(_UserChanged(
-freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as UserEntity?,
-  ));
-}
-
-/// Create a copy of AuthenticationEvent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserEntityCopyWith<$Res>? get user {
-    if (_self.user == null) {
-    return null;
-  }
-
-  return $UserEntityCopyWith<$Res>(_self.user!, (value) {
-    return _then(_self.copyWith(user: value));
-  });
-}
-}
 
 /// @nodoc
 mixin _$AuthenticationState {
