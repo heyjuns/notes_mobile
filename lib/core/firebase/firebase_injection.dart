@@ -9,4 +9,9 @@ void initFirebaseInjection() {
 
   // Firebase Firestore
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
+
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
+  );
+  FirebaseFirestore.setLoggingEnabled(true);
 }

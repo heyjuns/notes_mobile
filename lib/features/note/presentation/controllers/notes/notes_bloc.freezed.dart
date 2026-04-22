@@ -86,11 +86,12 @@ extension NotesEventPatterns on NotesEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _DeleteNote value)?  deleteNote,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that);case _:
+return started(_that);case _DeleteNote() when deleteNote != null:
+return deleteNote(_that);case _:
   return orElse();
 
 }
@@ -108,11 +109,12 @@ return started(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _DeleteNote value)  deleteNote,}){
 final _that = this;
 switch (_that) {
 case _Started():
-return started(_that);case _:
+return started(_that);case _DeleteNote():
+return deleteNote(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -129,11 +131,12 @@ return started(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _DeleteNote value)?  deleteNote,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that);case _:
+return started(_that);case _DeleteNote() when deleteNote != null:
+return deleteNote(_that);case _:
   return null;
 
 }
@@ -150,10 +153,11 @@ return started(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String userId)?  started,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String userId)?  started,TResult Function( String noteId,  String userId)?  deleteNote,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that.userId);case _:
+return started(_that.userId);case _DeleteNote() when deleteNote != null:
+return deleteNote(_that.noteId,_that.userId);case _:
   return orElse();
 
 }
@@ -171,10 +175,11 @@ return started(_that.userId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String userId)  started,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String userId)  started,required TResult Function( String noteId,  String userId)  deleteNote,}) {final _that = this;
 switch (_that) {
 case _Started():
-return started(_that.userId);case _:
+return started(_that.userId);case _DeleteNote():
+return deleteNote(_that.noteId,_that.userId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -191,10 +196,11 @@ return started(_that.userId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String userId)?  started,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String userId)?  started,TResult? Function( String noteId,  String userId)?  deleteNote,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that.userId);case _:
+return started(_that.userId);case _DeleteNote() when deleteNote != null:
+return deleteNote(_that.noteId,_that.userId);case _:
   return null;
 
 }
@@ -261,6 +267,74 @@ class __$StartedCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? userId = null,}) {
   return _then(_Started(
 null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _DeleteNote implements NotesEvent {
+  const _DeleteNote({required this.noteId, required this.userId});
+  
+
+ final  String noteId;
+@override final  String userId;
+
+/// Create a copy of NotesEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeleteNoteCopyWith<_DeleteNote> get copyWith => __$DeleteNoteCopyWithImpl<_DeleteNote>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteNote&&(identical(other.noteId, noteId) || other.noteId == noteId)&&(identical(other.userId, userId) || other.userId == userId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,noteId,userId);
+
+@override
+String toString() {
+  return 'NotesEvent.deleteNote(noteId: $noteId, userId: $userId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeleteNoteCopyWith<$Res> implements $NotesEventCopyWith<$Res> {
+  factory _$DeleteNoteCopyWith(_DeleteNote value, $Res Function(_DeleteNote) _then) = __$DeleteNoteCopyWithImpl;
+@override @useResult
+$Res call({
+ String noteId, String userId
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeleteNoteCopyWithImpl<$Res>
+    implements _$DeleteNoteCopyWith<$Res> {
+  __$DeleteNoteCopyWithImpl(this._self, this._then);
+
+  final _DeleteNote _self;
+  final $Res Function(_DeleteNote) _then;
+
+/// Create a copy of NotesEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? noteId = null,Object? userId = null,}) {
+  return _then(_DeleteNote(
+noteId: null == noteId ? _self.noteId : noteId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

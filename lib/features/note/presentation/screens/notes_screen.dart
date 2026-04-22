@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forui/forui.dart';
-import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:forui/forui.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:notes_mobile/core/service_locator.dart';
+import 'package:notes_mobile/features/auth/presentation/controllers/authentication/authentication_bloc.dart';
 import 'package:notes_mobile/features/auth/presentation/controllers/logout/logout_bloc.dart';
 import 'package:notes_mobile/features/auth/presentation/widgets/logout_button.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/notes/notes_bloc.dart';
+import 'package:notes_mobile/features/note/router/note_routes.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class NotesScreen extends HookWidget {
@@ -17,32 +19,43 @@ class NotesScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notesBloc = useBloc<NotesBloc>();
+    final authBloc = useBloc<AuthenticationBloc>();
+
+    final userId =
+        authBloc.state.whenOrNull(authenticated: (user) => user.uid) ?? '';
+
     useEffect(() {
-      notesBloc.add(NotesEvent.started('qAdlzRhLAsRSPDp0Ecw2gkqSV3G3'));
+      notesBloc.add(NotesEvent.started(userId));
       return null;
     }, []);
 
-    return BlocProvider(
-      create: (context) => sl<LogoutBloc>(),
-      child: FScaffold(
+    return FScaffold(
       header: FHeader(
-        title: Text("Notes"),
+        title: const Text('Notes'),
         suffixes: [
-          FButton.icon(onPress: () {}, child: Icon(Icons.add)),
-          LogoutButton(),
+          FButton.icon(
+            onPress: () async {
+              await context.push(NoteRoutes.noteForm.path);
+              notesBloc.add(NotesEvent.started(userId));
+            },
+            child: const Icon(Icons.add),
+          ),
+          const LogoutButton(),
         ],
       ),
       child: BlocBuilder<NotesBloc, NotesState>(
         builder: (context, state) {
           return state.maybeWhen(
-            loading: (notes) =>
-                Skeletonizer(enabled: true, child: _Items(notes: notes)),
-            loaded: (notes) => _Items(notes: notes),
-            failed: (error) => Text(error.toString()),
-            orElse: () => SizedBox(),
+            loading: (notes) => Skeletonizer(
+              enabled: true,
+              child: _Items(notes: notes, notesBloc: notesBloc, userId: userId),
+            ),
+            loaded: (notes) =>
+                _Items(notes: notes, notesBloc: notesBloc, userId: userId),
+            failed: (error) => Center(child: Text(error.toString())),
+            orElse: () => const SizedBox(),
           );
         },
-      ),
       ),
     );
   }
@@ -50,14 +63,21 @@ class NotesScreen extends HookWidget {
 
 class _Items extends StatelessWidget {
   final List<NoteEntity> notes;
-  const _Items({super.key, required this.notes});
+  final NotesBloc notesBloc;
+  final String userId;
+
+  const _Items({
+    required this.notes,
+    required this.notesBloc,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (notes.isEmpty) {
       return Center(
         child: Column(
-          mainAxisSize: .min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.description,
@@ -65,8 +85,8 @@ class _Items extends StatelessWidget {
               color: context.theme.colors.barrier,
             ),
             Text(
-              "Note is empty",
-              textAlign: .center,
+              'No notes yet',
+              textAlign: TextAlign.center,
               style: context.theme.typography.xs.copyWith(
                 color: context.theme.colors.primary,
               ),
@@ -75,23 +95,58 @@ class _Items extends StatelessWidget {
         ),
       );
     }
-    return ListView.separated(
-      physics: AlwaysScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final item = notes[index];
-        return FTile(
-          title: Text(item.title),
-          subtitle: Text(item.content),
-          suffix: Text(
-            item.updatedAt.toString(),
-            style: context.theme.typography.xs.copyWith(
-              color: context.theme.colors.secondaryForeground,
+
+    return RefreshIndicator(
+      onRefresh: () async => notesBloc.add(NotesEvent.started(userId)),
+      child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: notes.length,
+        padding: EdgeInsets.zero,
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
+        itemBuilder: (context, index) {
+          final item = notes[index];
+          return Dismissible(
+            key: ValueKey(item.id),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 16),
+              decoration: BoxDecoration(
+                color: context.theme.colors.destructive,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.delete, color: Colors.white),
             ),
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => SizedBox(height: 8),
-      itemCount: notes.length,
+            onDismissed: (_) => notesBloc.add(
+              NotesEvent.deleteNote(noteId: item.id, userId: userId),
+            ),
+            child: GestureDetector(
+              onTap: () async {
+                await context.push(NoteRoutes.noteForm.path, extra: item);
+                notesBloc.add(NotesEvent.started(userId));
+              },
+              child: FTile(
+                title: Text(item.title),
+                subtitle: Text(
+                  item.content,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                suffix: Text(
+                  _formatDate(item.updatedAt),
+                  style: context.theme.typography.xs.copyWith(
+                    color: context.theme.colors.secondaryForeground,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
   }
 }

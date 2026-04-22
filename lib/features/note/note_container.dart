@@ -1,3 +1,4 @@
+import 'package:notes_mobile/features/note/presentation/controllers/note_form/note_form_bloc.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/notes/notes_bloc.dart';
 
 import '../../core/service_locator.dart';
@@ -12,7 +13,12 @@ import 'domain/usecases/get_notes_usecase.dart';
 import 'domain/usecases/update_note_usecase.dart';
 
 void initNoteInjection() {
-  sl.registerFactory(() => NotesBloc(getNotesUseCase: sl()));
+  sl.registerFactory(
+    () => NotesBloc(getNotesUseCase: sl(), deleteNoteUseCase: sl()),
+  );
+  sl.registerFactory(
+    () => NoteFormBloc(createNoteUseCase: sl(), updateNoteUseCase: sl()),
+  );
 
   // Usecases
   sl.registerLazySingleton(() => GetNotesUseCase(sl()));
