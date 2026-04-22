@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:notes_mobile/core/service_locator.dart';
+import 'package:notes_mobile/features/auth/presentation/controllers/logout/logout_bloc.dart';
+import 'package:notes_mobile/features/auth/presentation/widgets/logout_button.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/notes/notes_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -19,12 +22,14 @@ class NotesScreen extends HookWidget {
       return null;
     }, []);
 
-    return FScaffold(
+    return BlocProvider(
+      create: (context) => sl<LogoutBloc>(),
+      child: FScaffold(
       header: FHeader(
         title: Text("Notes"),
         suffixes: [
           FButton.icon(onPress: () {}, child: Icon(Icons.add)),
-          FButton.icon(onPress: () {}, child: Icon(Icons.logout)),
+          LogoutButton(),
         ],
       ),
       child: BlocBuilder<NotesBloc, NotesState>(
@@ -37,6 +42,7 @@ class NotesScreen extends HookWidget {
             orElse: () => SizedBox(),
           );
         },
+      ),
       ),
     );
   }

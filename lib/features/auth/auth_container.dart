@@ -1,15 +1,20 @@
+import 'package:notes_mobile/features/auth/presentation/controllers/logout/logout_bloc.dart';
+
 import '../../core/service_locator.dart';
 import 'data/datasources/auth_remote_datasource_impl.dart';
 import 'data/repositories/auth_repository_impl.dart';
 import 'domain/datasources/auth_remote_datasource.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/usecases/usecases.dart';
+import 'presentation/controllers/authentication/authentication_bloc.dart';
 import 'presentation/controllers/login/login_bloc.dart';
 import 'presentation/controllers/register/register_bloc.dart';
 
 void initAuthInjection() {
   sl.registerFactory(() => LoginBloc(signInUseCase: sl()));
   sl.registerFactory(() => RegisterBloc(signUpUseCase: sl()));
+  sl.registerFactory(() => AuthenticationBloc(getCurrentUserUseCase: sl()));
+  sl.registerFactory(() => LogoutBloc(signOutUseCase: sl()));
 
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => SignInUseCase(sl()));

@@ -7,7 +7,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:notes_mobile/features/auth/presentation/controllers/login/login_bloc.dart';
 import 'package:notes_mobile/features/auth/presentation/params/sign_in_params.dart';
 import 'package:notes_mobile/features/auth/router/auth_routes.dart';
-import 'package:notes_mobile/features/note/router/note_routes.dart';
 
 class LoginScreen extends HookWidget {
   const LoginScreen({super.key});
@@ -19,7 +18,6 @@ class LoginScreen extends HookWidget {
     final passwordController = useTextEditingController();
     useBlocListener(loginBloc, (bloc, current, context) {
       current.whenOrNull(
-        loaded: (user) => context.go(NoteRoutes.notes.path),
         failed: (error) =>
             showFToast(context: context, title: Text(error.toString())),
       );

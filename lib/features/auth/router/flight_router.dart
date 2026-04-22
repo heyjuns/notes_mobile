@@ -6,10 +6,16 @@ import '../presentation/controllers/login/login_bloc.dart';
 import '../presentation/controllers/register/register_bloc.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/register_screen.dart';
+import '../presentation/screens/splash_screen.dart';
 import 'auth_routes.dart';
 
 abstract class AuthRouter {
   static List<GoRoute> get routes => [
+    GoRoute(
+      path: AuthRoutes.splash.path,
+      name: AuthRoutes.splash.name,
+      builder: (context, state) => const SplashScreen(),
+    ),
     GoRoute(
       path: AuthRoutes.login.path,
       name: AuthRoutes.login.name,

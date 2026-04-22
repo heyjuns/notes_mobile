@@ -1,4 +1,5 @@
 enum AuthRoutes {
+  splash('/'),
   login('/login'),
   register('/register');
 
