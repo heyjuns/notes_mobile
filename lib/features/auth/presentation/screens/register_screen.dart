@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:notes_mobile/core/error/failures/failure.dart';
 import 'package:notes_mobile/features/auth/presentation/params/sign_up_params.dart';
@@ -13,55 +14,119 @@ class RegisterScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginBloc = useBloc<RegisterBloc>();
+    final registerBloc = useBloc<RegisterBloc>();
+    final nameController = useTextEditingController();
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
-    final nameController = useTextEditingController();
-    useBlocListener(loginBloc, (bloc, current, context) {
+    final nameError = useState<String?>(null);
+    final emailError = useState<String?>(null);
+    final passwordError = useState<String?>(null);
+
+    useEffect(() {
+      void clearName() => nameError.value = null;
+      void clearEmail() => emailError.value = null;
+      void clearPassword() => passwordError.value = null;
+      nameController.addListener(clearName);
+      emailController.addListener(clearEmail);
+      passwordController.addListener(clearPassword);
+      return () {
+        nameController.removeListener(clearName);
+        emailController.removeListener(clearEmail);
+        passwordController.removeListener(clearPassword);
+      };
+    }, []);
+
+    useBlocListener(registerBloc, (bloc, current, context) {
       current.whenOrNull(
-        registerSuccess: (user) =>
-            showFToast(context: context, title: Text('Register Success')),
+        registerSuccess: (_) =>
+            showFToast(context: context, title: const Text('Account created!')),
         failed: (error) {
-          final String errorMessage = error.maybeWhen(
-            cache: (message) => message,
-            network: (message) => message,
-            notFound: (message) => message,
-            remote: (message, statusCode) => message,
-            orElse: () => '',
+          final message = error.maybeWhen(
+            remote: (m, _) => m,
+            network: (m) => m,
+            notFound: (m) => m,
+            unauthorized: () => 'Unauthorized',
+            orElse: () => 'Something went wrong',
           );
-          return showFToast(context: context, title: Text(errorMessage));
+          showFToast(context: context, title: Text(message));
         },
       );
     });
 
+    void validate() {
+      var valid = true;
+
+      final name = nameController.text.trim();
+      if (name.isEmpty) {
+        nameError.value = 'Name is required';
+        valid = false;
+      } else if (name.length < 2) {
+        nameError.value = 'Name min 2 characters';
+        valid = false;
+      } else {
+        nameError.value = null;
+      }
+
+      final email = emailController.text.trim();
+      if (email.isEmpty) {
+        emailError.value = 'Email is required';
+        valid = false;
+      } else if (!email.contains('@') || !email.contains('.')) {
+        emailError.value = 'Invalid email format';
+        valid = false;
+      } else {
+        emailError.value = null;
+      }
+
+      final password = passwordController.text;
+      if (password.isEmpty) {
+        passwordError.value = 'Password is required';
+        valid = false;
+      } else if (password.length < 6) {
+        passwordError.value = 'Password min 6 characters';
+        valid = false;
+      } else {
+        passwordError.value = null;
+      }
+
+      if (!valid) return;
+
+      registerBloc.add(
+        RegisterEvent.started(
+          params: SignUpParams(
+            name: name,
+            email: email,
+            password: password,
+          ),
+        ),
+      );
+    }
+
     return FScaffold(
-      header: FHeader(title: Text('Register')),
+      header: FHeader(title: const Text('Register')),
       child: Column(
         spacing: 8,
         children: [
           FTextField(
-            enabled: true,
             label: const Text('Name'),
             hint: 'John Doe',
-            error: null,
+            error: nameError.value != null ? Text(nameError.value!) : null,
             control: FTextFieldControl.managed(controller: nameController),
           ),
           FTextField(
-            enabled: true,
             label: const Text('Email'),
-            hint: 'John@doe.com',
-            error: null,
+            hint: 'john@example.com',
+            keyboardType: TextInputType.emailAddress,
+            error: emailError.value != null ? Text(emailError.value!) : null,
             control: FTextFieldControl.managed(controller: emailController),
           ),
           FTextField.password(
-            enabled: true,
             label: const Text('Password'),
-            hint: 'Enter password',
-            error: null,
+            hint: 'Min 6 characters',
+            error: passwordError.value != null ? Text(passwordError.value!) : null,
             control: FTextFieldControl.managed(controller: passwordController),
           ),
-
-          SizedBox(height: 16),
+          const SizedBox(height: 8),
           BlocBuilder<RegisterBloc, RegisterState>(
             builder: (context, state) {
               final isLoading = state.maybeWhen(
@@ -69,20 +134,20 @@ class RegisterScreen extends HookWidget {
                 orElse: () => false,
               );
               return FButton(
-                onPress: () {
-                  loginBloc.add(
-                    RegisterEvent.started(
-                      params: SignUpParams(
-                        name: nameController.text,
-                        email: emailController.text,
-                        password: passwordController.text,
-                      ),
-                    ),
-                  );
-                },
-                child: isLoading ? FCircularProgress() : Text('Register'),
+                onPress: isLoading ? null : validate,
+                child: isLoading
+                    ? const FCircularProgress()
+                    : const Text('Register'),
               );
             },
+          ),
+          FButton(
+            variant: .ghost,
+            onPress: () => context.pop(),
+            child: Text(
+              'Already have an account? Login',
+              style: context.theme.typography.xs,
+            ),
           ),
         ],
       ),

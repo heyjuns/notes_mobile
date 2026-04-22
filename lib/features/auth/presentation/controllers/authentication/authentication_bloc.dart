@@ -25,7 +25,6 @@ class AuthenticationBloc
     await emit.forEach<UserEntity?>(
       getCurrentUserUseCase.call(),
       onData: (user) {
-        print('user bloc $user');
         return user != null
             ? AuthenticationState.authenticated(user)
             : const AuthenticationState.unauthenticated();
