@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_mobile/features/auth/data/models/user_model.dart';
 import 'package:notes_mobile/core/error/exceptions/remote_exception.dart';
+import 'package:notes_mobile/features/auth/presentation/params/sign_in_params.dart';
+import 'package:notes_mobile/features/auth/presentation/params/sign_up_params.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../domain/datasources/auth_remote_datasource.dart';
@@ -16,13 +18,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       _firestore.collection('users');
 
   @override
-  Future<UserModel> signIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<UserModel> signIn(SignInParams params) async {
     final credential = await _auth.signInWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
+      email: params.email.trim(),
+      password: params.password,
     );
     final doc = await _users.doc(credential.user!.uid).get();
     if (!doc.exists) {
@@ -32,19 +31,15 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<UserModel> signUp({
-    required String email,
-    required String password,
-    required String name,
-  }) async {
+  Future<UserModel> signUp(SignUpParams params) async {
     final credential = await _auth.createUserWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
+      email: params.email.trim(),
+      password: params.password,
     );
     final model = UserModel(
       uid: credential.user!.uid,
-      email: email.trim(),
-      name: name.trim(),
+      email: params.email.trim(),
+      name: params.name.trim(),
       createdAt: DateTime.now(),
     );
     try {

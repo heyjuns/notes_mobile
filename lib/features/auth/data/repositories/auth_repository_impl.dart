@@ -16,10 +16,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   BaseResponse<UserEntity> signIn(SignInParams params) async {
     try {
-      final model = await _datasource.signIn(
-        email: params.email,
-        password: params.password,
-      );
+      final model = await _datasource.signIn(params);
       return Right(model.toEntity());
     } catch (e) {
       return Left(FirebaseExceptionMapper.map(e).toFailure());
@@ -29,11 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   BaseResponse<UserEntity> signUp(SignUpParams params) async {
     try {
-      await _datasource.signUp(
-        email: params.email,
-        password: params.password,
-        name: params.name,
-      );
+      await _datasource.signUp(params);
       return signIn(
         SignInParams(email: params.email, password: params.password),
       );
