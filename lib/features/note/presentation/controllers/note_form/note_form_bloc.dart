@@ -4,6 +4,7 @@ import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/domain/usecases/create_note_usecase.dart';
 import 'package:notes_mobile/features/note/domain/usecases/update_note_usecase.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/update_note_params.dart';
 
 import '../../../../../core/error/failures/failure.dart';
 
@@ -30,14 +31,7 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
 
     on<_UpdateNote>((event, emit) async {
       emit(const NoteFormState.loading());
-      final updated = event.note.copyWith(
-        title: event.title,
-        content: event.content,
-        updatedAt: DateTime.now(),
-      );
-      final result = await updateNoteUseCase.call(
-        UpdateNoteParams(note: updated),
-      );
+      final result = await updateNoteUseCase.call(event.params);
       result.fold(
         (l) => emit(NoteFormState.failed(error: l)),
         (r) => emit(NoteFormState.success(r)),

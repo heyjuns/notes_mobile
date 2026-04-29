@@ -10,5 +10,5 @@ class GetNotesUseCase extends UseCase<List<NoteEntity>, String> {
 
   @override
   BaseResponse<List<NoteEntity>> call(String userId) =>
-      _repository.getNotes(userId: userId);
+      _repository.getNotes(userId);
 }

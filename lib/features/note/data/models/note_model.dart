@@ -31,28 +31,46 @@ class NoteModel {
   }
 
   Map<String, dynamic> toFirestore() => {
-        'userId': userId,
-        'title': title,
-        'content': content,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'userId': userId,
+    'title': title,
+    'content': content,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   NoteEntity toEntity() => NoteEntity(
-        id: id,
-        userId: userId,
-        title: title,
-        content: content,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
+    id: id,
+    userId: userId,
+    title: title,
+    content: content,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
 
   factory NoteModel.fromEntity(NoteEntity entity) => NoteModel(
-        id: entity.id,
-        userId: entity.userId,
-        title: entity.title,
-        content: entity.content,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-      );
+    id: entity.id,
+    userId: entity.userId,
+    title: entity.title,
+    content: entity.content,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
+  );
+
+  NoteModel copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? content,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return NoteModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

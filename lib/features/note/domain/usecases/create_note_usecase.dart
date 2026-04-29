@@ -11,5 +11,5 @@ class CreateNoteUseCase extends UseCase<NoteEntity, CreateNoteParams> {
 
   @override
   BaseResponse<NoteEntity> call(CreateNoteParams params) =>
-      _repository.createNote(params: params);
+      _repository.createNote(params);
 }

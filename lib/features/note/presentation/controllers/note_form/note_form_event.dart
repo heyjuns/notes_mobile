@@ -5,9 +5,6 @@ abstract class NoteFormEvent with _$NoteFormEvent {
   const factory NoteFormEvent.createNote({required CreateNoteParams params}) =
       _CreateNote;
 
-  const factory NoteFormEvent.updateNote({
-    required NoteEntity note,
-    required String title,
-    required String content,
-  }) = _UpdateNote;
+  const factory NoteFormEvent.updateNote({required UpdateNoteParams params}) =
+      _UpdateNote;
 }

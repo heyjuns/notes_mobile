@@ -9,6 +9,7 @@ import 'package:notes_mobile/features/auth/presentation/controllers/authenticati
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/note_form/note_form_bloc.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/update_note_params.dart';
 
 class NoteFormScreen extends HookWidget {
   final NoteEntity? note;
@@ -114,9 +115,11 @@ class NoteFormScreen extends HookWidget {
     if (_isEditing) {
       bloc.add(
         NoteFormEvent.updateNote(
-          note: note!,
-          title: title.trim(),
-          content: content.trim(),
+          params: UpdateNoteParams(
+            id: note!.id,
+            title: title.trim(),
+            content: content.trim(),
+          ),
         ),
       );
     } else {

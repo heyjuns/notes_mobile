@@ -16,10 +16,8 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
 
   final List<NoteEntity> dummy = List.generate(5, (index) => NoteEntity.init());
 
-  NotesBloc({
-    required this.getNotesUseCase,
-    required this.deleteNoteUseCase,
-  }) : super(NotesState.initial()) {
+  NotesBloc({required this.getNotesUseCase, required this.deleteNoteUseCase})
+    : super(NotesState.initial()) {
     on<_Started>((event, emit) async {
       emit(NotesState.loading(notes: dummy));
       final result = await getNotesUseCase.call(event.userId);
@@ -34,9 +32,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
         loaded: (notes) => notes,
         orElse: () => <NoteEntity>[],
       );
-      final result = await deleteNoteUseCase.call(
-        DeleteNoteParams(id: event.noteId),
-      );
+      final result = await deleteNoteUseCase.call(event.noteId);
       result.fold(
         (l) => emit(NotesState.failed(error: l)),
         (_) => emit(

@@ -14,22 +14,22 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoteFormEvent {
 
-
+ Object get params;
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteFormEvent);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteFormEvent&&const DeepCollectionEquality().equals(other.params, params));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(params));
 
 @override
 String toString() {
-  return 'NoteFormEvent()';
+  return 'NoteFormEvent(params: $params)';
 }
 
 
@@ -122,11 +122,11 @@ return updateNote(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( CreateNoteParams params)?  createNote,TResult Function( NoteEntity note,  String title,  String content)?  updateNote,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( CreateNoteParams params)?  createNote,TResult Function( UpdateNoteParams params)?  updateNote,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateNote() when createNote != null:
 return createNote(_that.params);case _UpdateNote() when updateNote != null:
-return updateNote(_that.note,_that.title,_that.content);case _:
+return updateNote(_that.params);case _:
   return orElse();
 
 }
@@ -144,11 +144,11 @@ return updateNote(_that.note,_that.title,_that.content);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( CreateNoteParams params)  createNote,required TResult Function( NoteEntity note,  String title,  String content)  updateNote,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( CreateNoteParams params)  createNote,required TResult Function( UpdateNoteParams params)  updateNote,}) {final _that = this;
 switch (_that) {
 case _CreateNote():
 return createNote(_that.params);case _UpdateNote():
-return updateNote(_that.note,_that.title,_that.content);case _:
+return updateNote(_that.params);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +165,11 @@ return updateNote(_that.note,_that.title,_that.content);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( CreateNoteParams params)?  createNote,TResult? Function( NoteEntity note,  String title,  String content)?  updateNote,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( CreateNoteParams params)?  createNote,TResult? Function( UpdateNoteParams params)?  updateNote,}) {final _that = this;
 switch (_that) {
 case _CreateNote() when createNote != null:
 return createNote(_that.params);case _UpdateNote() when updateNote != null:
-return updateNote(_that.note,_that.title,_that.content);case _:
+return updateNote(_that.params);case _:
   return null;
 
 }
@@ -184,7 +184,7 @@ class _CreateNote implements NoteFormEvent {
   const _CreateNote({required this.params});
   
 
- final  CreateNoteParams params;
+@override final  CreateNoteParams params;
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -256,12 +256,10 @@ $CreateNoteParamsCopyWith<$Res> get params {
 
 
 class _UpdateNote implements NoteFormEvent {
-  const _UpdateNote({required this.note, required this.title, required this.content});
+  const _UpdateNote({required this.params});
   
 
- final  NoteEntity note;
- final  String title;
- final  String content;
+@override final  UpdateNoteParams params;
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -273,16 +271,16 @@ _$UpdateNoteCopyWith<_UpdateNote> get copyWith => __$UpdateNoteCopyWithImpl<_Upd
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateNote&&(identical(other.note, note) || other.note == note)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateNote&&(identical(other.params, params) || other.params == params));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,note,title,content);
+int get hashCode => Object.hash(runtimeType,params);
 
 @override
 String toString() {
-  return 'NoteFormEvent.updateNote(note: $note, title: $title, content: $content)';
+  return 'NoteFormEvent.updateNote(params: $params)';
 }
 
 
@@ -293,11 +291,11 @@ abstract mixin class _$UpdateNoteCopyWith<$Res> implements $NoteFormEventCopyWit
   factory _$UpdateNoteCopyWith(_UpdateNote value, $Res Function(_UpdateNote) _then) = __$UpdateNoteCopyWithImpl;
 @useResult
 $Res call({
- NoteEntity note, String title, String content
+ UpdateNoteParams params
 });
 
 
-$NoteEntityCopyWith<$Res> get note;
+$UpdateNoteParamsCopyWith<$Res> get params;
 
 }
 /// @nodoc
@@ -310,12 +308,10 @@ class __$UpdateNoteCopyWithImpl<$Res>
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? note = null,Object? title = null,Object? content = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? params = null,}) {
   return _then(_UpdateNote(
-note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as NoteEntity,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,
+params: null == params ? _self.params : params // ignore: cast_nullable_to_non_nullable
+as UpdateNoteParams,
   ));
 }
 
@@ -323,10 +319,10 @@ as String,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$NoteEntityCopyWith<$Res> get note {
+$UpdateNoteParamsCopyWith<$Res> get params {
   
-  return $NoteEntityCopyWith<$Res>(_self.note, (value) {
-    return _then(_self.copyWith(note: value));
+  return $UpdateNoteParamsCopyWith<$Res>(_self.params, (value) {
+    return _then(_self.copyWith(params: value));
   });
 }
 }
