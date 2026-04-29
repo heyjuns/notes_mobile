@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/domain/usecases/create_note_usecase.dart';
 import 'package:notes_mobile/features/note/domain/usecases/update_note_usecase.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
 
 import '../../../../../core/error/failures/failure.dart';
 
@@ -20,15 +21,7 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
   }) : super(const NoteFormState.initial()) {
     on<_CreateNote>((event, emit) async {
       emit(const NoteFormState.loading());
-      final note = NoteEntity(
-        id: '',
-        userId: event.userId,
-        title: event.title,
-        content: event.content,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-      final result = await createNoteUseCase.call(CreateNoteParams(note: note));
+      final result = await createNoteUseCase.call(event.params);
       result.fold(
         (l) => emit(NoteFormState.failed(error: l)),
         (r) => emit(NoteFormState.success(r)),
@@ -42,7 +35,9 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
         content: event.content,
         updatedAt: DateTime.now(),
       );
-      final result = await updateNoteUseCase.call(UpdateNoteParams(note: updated));
+      final result = await updateNoteUseCase.call(
+        UpdateNoteParams(note: updated),
+      );
       result.fold(
         (l) => emit(NoteFormState.failed(error: l)),
         (r) => emit(NoteFormState.success(r)),

@@ -4,6 +4,7 @@ import 'package:notes_mobile/core/utils/typedefs/base_response.dart';
 import 'package:notes_mobile/features/note/data/models/note_model.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/domain/repositories/note_repository.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
 
 import '../../domain/datasources/note_remote_datasource.dart';
 
@@ -33,11 +34,11 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  BaseResponse<NoteEntity> createNote({required NoteEntity note}) async {
+  BaseResponse<NoteEntity> createNote({
+    required CreateNoteParams params,
+  }) async {
     try {
-      final model = await _datasource.createNote(
-        note: NoteModel.fromEntity(note),
-      );
+      final model = await _datasource.createNote(params: params);
       return Right(model.toEntity());
     } catch (e) {
       return Left(FirebaseExceptionMapper.map(e).toFailure());

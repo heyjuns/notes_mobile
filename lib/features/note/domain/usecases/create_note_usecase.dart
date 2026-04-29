@@ -2,6 +2,7 @@ import 'package:notes_mobile/core/usecase.dart';
 import 'package:notes_mobile/core/utils/typedefs/base_response.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/domain/repositories/note_repository.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
 
 class CreateNoteUseCase extends UseCase<NoteEntity, CreateNoteParams> {
   const CreateNoteUseCase(this._repository);
@@ -10,11 +11,5 @@ class CreateNoteUseCase extends UseCase<NoteEntity, CreateNoteParams> {
 
   @override
   BaseResponse<NoteEntity> call(CreateNoteParams params) =>
-      _repository.createNote(note: params.note);
-}
-
-class CreateNoteParams {
-  const CreateNoteParams({required this.note});
-
-  final NoteEntity note;
+      _repository.createNote(params: params);
 }

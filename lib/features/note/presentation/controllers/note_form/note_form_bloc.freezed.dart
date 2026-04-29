@@ -14,62 +14,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoteFormEvent {
 
- String get title; String get content;
-/// Create a copy of NoteFormEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$NoteFormEventCopyWith<NoteFormEvent> get copyWith => _$NoteFormEventCopyWithImpl<NoteFormEvent>(this as NoteFormEvent, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteFormEvent&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteFormEvent);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,content);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'NoteFormEvent(title: $title, content: $content)';
+  return 'NoteFormEvent()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $NoteFormEventCopyWith<$Res>  {
-  factory $NoteFormEventCopyWith(NoteFormEvent value, $Res Function(NoteFormEvent) _then) = _$NoteFormEventCopyWithImpl;
-@useResult
-$Res call({
- String title, String content
-});
-
-
-
-
-}
-/// @nodoc
-class _$NoteFormEventCopyWithImpl<$Res>
-    implements $NoteFormEventCopyWith<$Res> {
-  _$NoteFormEventCopyWithImpl(this._self, this._then);
-
-  final NoteFormEvent _self;
-  final $Res Function(NoteFormEvent) _then;
-
-/// Create a copy of NoteFormEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? content = null,}) {
-  return _then(_self.copyWith(
-title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
+class $NoteFormEventCopyWith<$Res>  {
+$NoteFormEventCopyWith(NoteFormEvent _, $Res Function(NoteFormEvent) __);
 }
 
 
@@ -154,10 +122,10 @@ return updateNote(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String userId,  String title,  String content)?  createNote,TResult Function( NoteEntity note,  String title,  String content)?  updateNote,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( CreateNoteParams params)?  createNote,TResult Function( NoteEntity note,  String title,  String content)?  updateNote,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateNote() when createNote != null:
-return createNote(_that.userId,_that.title,_that.content);case _UpdateNote() when updateNote != null:
+return createNote(_that.params);case _UpdateNote() when updateNote != null:
 return updateNote(_that.note,_that.title,_that.content);case _:
   return orElse();
 
@@ -176,10 +144,10 @@ return updateNote(_that.note,_that.title,_that.content);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String userId,  String title,  String content)  createNote,required TResult Function( NoteEntity note,  String title,  String content)  updateNote,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( CreateNoteParams params)  createNote,required TResult Function( NoteEntity note,  String title,  String content)  updateNote,}) {final _that = this;
 switch (_that) {
 case _CreateNote():
-return createNote(_that.userId,_that.title,_that.content);case _UpdateNote():
+return createNote(_that.params);case _UpdateNote():
 return updateNote(_that.note,_that.title,_that.content);case _:
   throw StateError('Unexpected subclass');
 
@@ -197,10 +165,10 @@ return updateNote(_that.note,_that.title,_that.content);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String userId,  String title,  String content)?  createNote,TResult? Function( NoteEntity note,  String title,  String content)?  updateNote,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( CreateNoteParams params)?  createNote,TResult? Function( NoteEntity note,  String title,  String content)?  updateNote,}) {final _that = this;
 switch (_that) {
 case _CreateNote() when createNote != null:
-return createNote(_that.userId,_that.title,_that.content);case _UpdateNote() when updateNote != null:
+return createNote(_that.params);case _UpdateNote() when updateNote != null:
 return updateNote(_that.note,_that.title,_that.content);case _:
   return null;
 
@@ -213,16 +181,14 @@ return updateNote(_that.note,_that.title,_that.content);case _:
 
 
 class _CreateNote implements NoteFormEvent {
-  const _CreateNote({required this.userId, required this.title, required this.content});
+  const _CreateNote({required this.params});
   
 
- final  String userId;
-@override final  String title;
-@override final  String content;
+ final  CreateNoteParams params;
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 _$CreateNoteCopyWith<_CreateNote> get copyWith => __$CreateNoteCopyWithImpl<_CreateNote>(this, _$identity);
 
@@ -230,16 +196,16 @@ _$CreateNoteCopyWith<_CreateNote> get copyWith => __$CreateNoteCopyWithImpl<_Cre
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateNote&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateNote&&(identical(other.params, params) || other.params == params));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,title,content);
+int get hashCode => Object.hash(runtimeType,params);
 
 @override
 String toString() {
-  return 'NoteFormEvent.createNote(userId: $userId, title: $title, content: $content)';
+  return 'NoteFormEvent.createNote(params: $params)';
 }
 
 
@@ -248,13 +214,13 @@ String toString() {
 /// @nodoc
 abstract mixin class _$CreateNoteCopyWith<$Res> implements $NoteFormEventCopyWith<$Res> {
   factory _$CreateNoteCopyWith(_CreateNote value, $Res Function(_CreateNote) _then) = __$CreateNoteCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
- String userId, String title, String content
+ CreateNoteParams params
 });
 
 
-
+$CreateNoteParamsCopyWith<$Res> get params;
 
 }
 /// @nodoc
@@ -267,16 +233,23 @@ class __$CreateNoteCopyWithImpl<$Res>
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? title = null,Object? content = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? params = null,}) {
   return _then(_CreateNote(
-userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,
+params: null == params ? _self.params : params // ignore: cast_nullable_to_non_nullable
+as CreateNoteParams,
   ));
 }
 
-
+/// Create a copy of NoteFormEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CreateNoteParamsCopyWith<$Res> get params {
+  
+  return $CreateNoteParamsCopyWith<$Res>(_self.params, (value) {
+    return _then(_self.copyWith(params: value));
+  });
+}
 }
 
 /// @nodoc
@@ -287,12 +260,12 @@ class _UpdateNote implements NoteFormEvent {
   
 
  final  NoteEntity note;
-@override final  String title;
-@override final  String content;
+ final  String title;
+ final  String content;
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 _$UpdateNoteCopyWith<_UpdateNote> get copyWith => __$UpdateNoteCopyWithImpl<_UpdateNote>(this, _$identity);
 
@@ -318,7 +291,7 @@ String toString() {
 /// @nodoc
 abstract mixin class _$UpdateNoteCopyWith<$Res> implements $NoteFormEventCopyWith<$Res> {
   factory _$UpdateNoteCopyWith(_UpdateNote value, $Res Function(_UpdateNote) _then) = __$UpdateNoteCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  NoteEntity note, String title, String content
 });
@@ -337,7 +310,7 @@ class __$UpdateNoteCopyWithImpl<$Res>
 
 /// Create a copy of NoteFormEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? note = null,Object? title = null,Object? content = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? note = null,Object? title = null,Object? content = null,}) {
   return _then(_UpdateNote(
 note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as NoteEntity,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable

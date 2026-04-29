@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notes_mobile/core/error/exceptions/remote_exception.dart';
 import 'package:notes_mobile/features/note/data/models/note_model.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
 
 import '../../domain/datasources/note_remote_datasource.dart';
 
@@ -29,15 +30,15 @@ class NoteRemoteDatasourceImpl implements NoteRemoteDatasource {
   }
 
   @override
-  Future<NoteModel> createNote({required NoteModel note}) async {
+  Future<NoteModel> createNote({required CreateNoteParams params}) async {
     final ref = _notes.doc();
     final model = NoteModel(
       id: ref.id,
-      userId: note.userId,
-      title: note.title,
-      content: note.content,
-      createdAt: note.createdAt,
-      updatedAt: note.updatedAt,
+      userId: params.userId,
+      title: params.title,
+      content: params.content,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
     await ref.set(model.toFirestore());
     return model;

@@ -8,6 +8,7 @@ import 'package:notes_mobile/core/error/failures/failure.dart';
 import 'package:notes_mobile/features/auth/presentation/controllers/authentication/authentication_bloc.dart';
 import 'package:notes_mobile/features/note/domain/entities/note_entity.dart';
 import 'package:notes_mobile/features/note/presentation/controllers/note_form/note_form_bloc.dart';
+import 'package:notes_mobile/features/note/presentation/controllers/params/create_note_params.dart';
 
 class NoteFormScreen extends HookWidget {
   final NoteEntity? note;
@@ -126,9 +127,11 @@ class NoteFormScreen extends HookWidget {
           '';
       bloc.add(
         NoteFormEvent.createNote(
-          userId: userId,
-          title: title.trim(),
-          content: content.trim(),
+          params: CreateNoteParams(
+            userId: userId,
+            title: title,
+            content: content,
+          ),
         ),
       );
     }
